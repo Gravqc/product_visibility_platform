@@ -4,7 +4,7 @@ import connectToDatabase from '@/lib/db';
 import Prompt from '@/models/Prompt';
 import AnalysisResult from '@/models/AnalysisResult';
 import Product from '@/models/Product';
-import { GeminiLLM } from '@/lib/llm/GeminiLLM';
+import { OpenAILLM } from '@/lib/llm/OpenAILLM';
 import { LLMAnalysisResponse } from '@/lib/llm/BaseLLM';
 import { GENERATE_QUERIES_PROMPT, ANALYSIS_PROMPT } from '@/lib/llm/prompts';
 import { revalidatePath } from 'next/cache';
@@ -15,7 +15,7 @@ export async function generatePromptsForProduct(productId: string) {
   const product = await Product.findById(productId);
   if (!product) throw new Error('Product not found');
 
-  const llm = new GeminiLLM();
+  const llm = new OpenAILLM();
   const promptStr = GENERATE_QUERIES_PROMPT.replace('{product_title}', product.title).replace('{product_brand}', product.brand);
   
   let generatedQueries: string[] = [];
@@ -72,7 +72,7 @@ export async function runAnalysisForPrompt(promptId: string) {
 
   try {
     const product = prompt.productId as any;
-    const llm = new GeminiLLM();
+    const llm = new OpenAILLM();
     
     // Use structured JSON prompting for analysis
     const llmPrompt = ANALYSIS_PROMPT.replace('{user_query}', prompt.text);
