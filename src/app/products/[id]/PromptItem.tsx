@@ -16,7 +16,7 @@ export default function PromptItem({ prompt, result }: { prompt: any, result: an
         onClick={() => setExpanded(!expanded)}
       >
         <div className="flex-1">
-          <p className="font-medium text-gray-900 text-lg">"{prompt.text}"</p>
+          <p className="font-semibold text-gray-900 text-base">"{prompt.text}"</p>
           <div className="flex items-center space-x-3 mt-1">
             <span 
               className={`text-xs tracking-wide uppercase font-semibold ${
@@ -58,7 +58,7 @@ export default function PromptItem({ prompt, result }: { prompt: any, result: an
             </span>
           </div>
           {result.rawResponse && (
-            <div className="text-sm text-gray-700 bg-gray-50 p-4 rounded max-h-96 overflow-y-auto whitespace-pre-wrap font-serif leading-relaxed">
+            <div className="text-sm text-gray-800 bg-gray-50/80 p-5 rounded max-h-[500px] overflow-y-auto whitespace-pre-wrap leading-relaxed border border-gray-100">
               {result.rawResponse}
             </div>
           )}
