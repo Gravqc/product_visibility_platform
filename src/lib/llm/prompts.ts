@@ -29,7 +29,7 @@ Return the result STRICTLY as a JSON object matching this exact schema:
   "brands": [
     {
       "brand_name": "Name of the brand",
-      "citations": ["A snippet from your text where you mentioned this brand"]
+      "citations": ["A URL or link you searched up to verify this brand. If no link is available, provide a snippet from your text"]
     }
   ]
 }

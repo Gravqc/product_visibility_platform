@@ -21,6 +21,35 @@ export default async function ProductDetailsPage({ params }: { params: { id: str
   const targetMentions = results.filter((r: any) => r.mentionsTarget).length;
   const score = completedAnalyses > 0 ? Math.round((targetMentions / completedAnalyses) * 100) : 0;
 
+  // Compute Leaderboard
+  const brandMentions: Record<string, { count: number, citations: string[], originalName: string }> = {};
+  results.forEach((r: any) => {
+    if (r.brandsData && r.brandsData.length > 0) {
+      r.brandsData.forEach((b: any) => {
+        const brandName = b.brand_name.toLowerCase();
+        if (!brandMentions[brandName]) {
+          brandMentions[brandName] = { count: 0, citations: [], originalName: b.brand_name };
+        }
+        brandMentions[brandName].count++;
+        b.citations.forEach((c: string) => {
+          if (!brandMentions[brandName].citations.includes(c)) {
+            brandMentions[brandName].citations.push(c);
+          }
+        });
+      });
+    } else if (r.recommendedBrands) {
+      r.recommendedBrands.forEach((name: string) => {
+        const brandName = name.toLowerCase();
+        if (!brandMentions[brandName]) {
+          brandMentions[brandName] = { count: 0, citations: [], originalName: name };
+        }
+        brandMentions[brandName].count++;
+      });
+    }
+  });
+
+  const leaderboard = Object.values(brandMentions).sort((a, b) => b.count - a.count).slice(0, 5);
+
   return (
     <main className="min-h-screen p-6 md:p-12 bg-white text-gray-900 font-sans tracking-tight">
       <div className="max-w-3xl mx-auto space-y-12">
@@ -59,6 +88,38 @@ export default async function ProductDetailsPage({ params }: { params: { id: str
               <div>
                 <p className="text-xs text-gray-400 uppercase tracking-widest font-bold mb-2">Mentions</p>
                 <p className="text-3xl font-bold text-gray-900">{targetMentions}</p>
+              </div>
+            </div>
+          )}
+
+          {/* Competitor Leaderboard */}
+          {leaderboard.length > 0 && (
+            <div className="mb-10 p-6 bg-gray-50 rounded-xl border border-gray-100">
+              <h3 className="text-lg font-bold text-gray-900 mb-4">Top Recommended Brands</h3>
+              <div className="space-y-4">
+                {leaderboard.map((item, index) => (
+                  <div key={index} className="flex flex-col md:flex-row md:items-center justify-between border-b border-gray-200 pb-3 last:border-0 last:pb-0">
+                    <div className="flex items-center mb-2 md:mb-0">
+                      <span className="text-gray-400 font-bold mr-4">#{index + 1}</span>
+                      <span className={`font-semibold ${item.originalName.toLowerCase().includes(product.brand.toLowerCase()) ? 'text-blue-600' : 'text-gray-900'}`}>
+                        {item.originalName} {item.originalName.toLowerCase().includes(product.brand.toLowerCase()) && '(You)'}
+                      </span>
+                    </div>
+                    <div className="flex flex-col md:items-end text-sm">
+                      <span className="text-gray-600 font-medium">Mentioned {item.count} times</span>
+                      {item.citations.length > 0 && (
+                        <div className="text-xs text-gray-500 mt-1 max-w-xs md:max-w-md truncate">
+                          {item.citations.filter(c => c.startsWith('http')).map((c, i) => (
+                            <a key={i} href={c} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline mr-2">Link {i+1}</a>
+                          ))}
+                          {item.citations.filter(c => !c.startsWith('http')).length > 0 && (
+                            <span className="italic" title={item.citations.filter(c => !c.startsWith('http')).join(' | ')}>+ snippets</span>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           )}

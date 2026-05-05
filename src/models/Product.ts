@@ -5,6 +5,7 @@ export interface IProduct extends Document {
   brand: string;
   asin?: string;
   url?: string;
+  competitors?: string[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -15,6 +16,7 @@ const ProductSchema: Schema = new Schema(
     brand: { type: String, required: true },
     asin: { type: String, required: false },
     url: { type: String, required: false },
+    competitors: [{ type: String }],
   },
   { timestamps: true }
 );

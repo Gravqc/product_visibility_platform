@@ -10,6 +10,10 @@ export interface AnalysisData {
   mentionsTarget: boolean;
   targetRank: number | null;
   recommendedBrands: string[];
+  brandsData: Array<{
+    brand_name: string;
+    citations: string[];
+  }>;
   recommendedProducts: string[];
   score: number;
   rawResponse: string;
@@ -64,6 +68,7 @@ export abstract class BaseLLM {
       mentionsTarget,
       targetRank,
       recommendedBrands,
+      brandsData: jsonResponse.brands,
       recommendedProducts: [],
       score,
       rawResponse: jsonResponse.full_llm_text,

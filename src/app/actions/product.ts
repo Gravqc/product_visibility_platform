@@ -4,9 +4,13 @@ import connectToDatabase from '@/lib/db';
 import Product from '@/models/Product';
 import { revalidatePath } from 'next/cache';
 
-export async function createProduct(data: { title: string; brand: string; asin: string; url: string }) {
+export async function createProduct(data: { title: string; brand: string; asin: string; url: string; competitors: string[] }) {
   await connectToDatabase();
-  const product = await Product.create(data);
+  const payload = { ...data };
+  if (!payload.asin) delete (payload as any).asin;
+  if (!payload.url) delete (payload as any).url;
+  
+  const product = await Product.create(payload);
   revalidatePath('/products');
   return JSON.parse(JSON.stringify(product));
 }

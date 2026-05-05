@@ -17,9 +17,11 @@ export default function AddProductForm() {
     const brand = formData.get('brand') as string;
     const asin = formData.get('asin') as string;
     const url = formData.get('url') as string;
+    const competitorsStr = formData.get('competitors') as string;
+    const competitors = competitorsStr ? competitorsStr.split(',').map(c => c.trim()).filter(c => c) : [];
 
     try {
-      const product = await createProduct({ title, brand, asin, url });
+      const product = await createProduct({ title, brand, asin, url, competitors });
       router.push(`/products/${product._id}`);
     } catch (err) {
       console.error(err);
@@ -46,6 +48,10 @@ export default function AddProductForm() {
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Amazon URL <span className="text-gray-400 font-normal">(Optional)</span></label>
         <input name="url" type="url" className="mt-1 block w-full rounded border border-gray-200 px-3 py-2 text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none" placeholder="https://amazon.com/dp/B000QSNYGI" />
+      </div>
+      <div className="md:col-span-2">
+        <label className="block text-sm font-medium text-gray-700 mb-1">Competitors <span className="text-gray-400 font-normal">(Comma separated, Optional)</span></label>
+        <input name="competitors" type="text" className="mt-1 block w-full rounded border border-gray-200 px-3 py-2 text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none" placeholder="e.g. MuscleTech, Dymatize, MyProtein" />
       </div>
       <div className="md:col-span-2 flex justify-end mt-2">
         <button 
