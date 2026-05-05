@@ -22,7 +22,7 @@ export default function PromptItem({ prompt, result }: { prompt: any, result: an
               className={`text-xs tracking-wide uppercase font-semibold ${
                 prompt.status === 'COMPLETED' ? 'text-green-600' : 
                 prompt.status === 'RUNNING' ? 'text-yellow-600' : 
-                prompt.status === 'FAILED' ? 'text-red-600 cursor-help' : 
+                prompt.status === 'FAILED' ? 'text-red-600' : 
                 'text-gray-500'
               }`}
               title={prompt.status === 'FAILED' ? "LLM Server didn't respond or request failed" : undefined}

@@ -16,7 +16,7 @@ export default function Home() {
             href="/products" 
             className="rounded-md bg-blue-600 px-8 py-4 text-lg font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 transition-colors"
           >
-            Start Testing Now
+            Try Now
           </Link>
         </div>
       </div>
